@@ -8,11 +8,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FruitController extends AbstractController
-{
-    #[Route('/', name: 'app_fruit')]
+class IndexController extends AbstractController
+{ 
     public function index(FruitRepository $fruitRepository, PaginatorInterface $paginator, Request $request)
     {
+
+        return $this->render('fruit/index.html.twig');
+
         // $queryBuilder = $repository->createQueryBuilder('f')
         //     ->orderBy('f.name', 'ASC');
 
@@ -65,5 +67,25 @@ class FruitController extends AbstractController
             'fruits' => $fruitsPagination
         ]);
 
+    }
+ 
+    public function favorite(Request $request, FruitRepository $fruitRepository, $id)
+    { 
+        $fruit = $fruitRepository->find($id);
+
+        if (!$fruit) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Fruit not found',
+            ]);
+        }
+
+        $isFavorite = $fruit->isFavorite();
+        $fruit->setFavorite(!$isFavorite); 
+
+        return $this->json([
+            'success' => true,
+            'favorite' => !$isFavorite,
+        ]);
     }
 }

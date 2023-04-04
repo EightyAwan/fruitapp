@@ -64,6 +64,12 @@ class Fruit
      */
     private $sugar; 
 
+    
+     /**
+     * @ORM\Column(type="boolean")
+     */
+    public $favorite = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -175,6 +181,18 @@ class Fruit
         $this->sugar = $sugar;
 
         return $this;
-    } 
+    }  
+    public function isFavorite(): bool
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(bool $favorite): self
+    {
+        $this->favorite = $favorite;
+
+        return $this;
+    }
+
  
 }

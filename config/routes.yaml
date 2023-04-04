@@ -6,6 +6,18 @@ kernel:
     resource: ../src/Kernel.php
     type: annotation
     
+index:
+    path: /
+    controller: App\Controller\IndexController::index
+
 fruits:
     path: /fruits
-    controller: App\Controller\FruitController::index
+    controller: App\Controller\Resources\FruitController::index
+    
+favorite_fruits:
+    path: /favorite/fruits
+    controller: App\Controller\Resources\FavoriteController::index
+
+add_favorite_fruit:
+    path: /favorite/store
+    controller: App\Controller\Resources\FavoriteController::store
