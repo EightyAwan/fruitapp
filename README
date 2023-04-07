@@ -1,0 +1,18 @@
+Welcome to Fruit App
+#######################################
+There are some steps to run this project 
+#######################################
+
+
+After clone this project.
+
+1) Please run composer install command to install project packages.
+2) please run yarn install for npm packages
+3) create create a db and set the configuration in .env file & also mail configuration
+4) run the command php bin/console doctrine:schema:update --force to create tables
+5) run the command php bin/console fruits:fetch to fetch the fruits into the db.
+6) run the command to start the project symfony server:start
+7) go to your browser and visit this http://127.0.0.1:8000/ 
+
+That's it.
+
