@@ -1,21 +1,24 @@
 <template>
     <div>
       <div>
-        <h1>Total Protein</h1>
-        <b>{{  }}</b>
+        <h3>Total Protein</h3>
+        <b>{{ totalFruitDiet?.total_protein }}</b>
       </div> 
       <div>
-        <h1>Total Fat</h1>
-        <b>{{  }}</b>
+        <h3>Total Fat</h3>
+        <b>{{ totalFruitDiet?.total_fat }}</b>
       </div> 
       <div>
-        <h1>Total Calories</h1>
-        <b>{{  }}</b>
+        <h3>Total Calories</h3>
+        <b>{{ totalFruitDiet?.total_calories }}</b>
       </div> 
       <div>
-        <h1>Total Sugar</h1>
-        <b>{{  }}</b>
+        <h3>Total Sugar</h3>
+        <b>{{ totalFruitDiet?.total_sugar }}</b>
       </div> 
+      <hr>
+      <label>Search By Name/Family</label>
+      <input type="text" v-model="searchQuery">
 
       <table>
       <thead>
@@ -27,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.id">
+        <tr v-for="item in filteredItems" :key="item.name">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.family }}</td>
@@ -53,8 +56,10 @@
     },
     data() {
       return {
-        items: [],
+        searchQuery: '',
+        items: [], 
         page: 1,
+        totalFruitDiet: [],
         perPage: 10,
         total: 0,
       };
@@ -62,6 +67,11 @@
     computed: {
       lastPage() {
         return Math.ceil(this.total / this.perPage);
+      },
+      filteredItems() {
+      return this.items.filter(item => {
+        return item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || item.family.toLowerCase().includes(this.searchQuery.toLowerCase());
+      });
       },
     },
     async mounted() {
@@ -75,8 +85,9 @@
             per_page: this.perPage,
           },
         }); 
-        this.items = response.data.data.items;
+        this.items = response.data.data.items; 
         this.total = response.data.data.totalItems;
+        this.totalFruitDiet = response.data.data.totalFruitDiet; 
       },
       async prevPage() {
         this.page -= 1;

@@ -58,5 +58,7 @@ class FruitRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     } 
+
+    
     
 }

@@ -26,11 +26,26 @@ class FavoriteController extends AbstractController
             $fruits = $this->fruitRepository->findBy(['favorite' => 1], null, $pageSize, ($page - 1) * $pageSize);
             $totalItems = $this->fruitRepository->count(['favorite' => 1]);
             
+            $totalProtein = $this->fruitRepository 
+            ->createQueryBuilder('f');
+            $totalProtein->select('SUM(f.protein) as total_protein, SUM(f.fat) as total_fat, SUM(f.calories) as total_calories, SUM(f.sugar) as total_sugar');
+            $totalProtein->where('f.favorite = :favorite');
+            $totalProtein->setParameter('favorite', 1);
+            $totalProteinResult = $totalProtein->getQuery()->getScalarResult()[0]; 
+
+            $totalFruitDiet = array(
+                'total_protein' => $totalProteinResult['total_protein'],
+                'total_fat' => $totalProteinResult['total_fat'],
+                'total_calories' => $totalProteinResult['total_calories'],
+                'total_sugar' => $totalProteinResult['total_sugar'],
+            );  
+
             return $this->json([
                 'message' => 'favorite fruits list',
                 'data' => [
                     'items' => $fruits,
                     'totalItems' => $totalItems,
+                    'totalFruitDiet' => $totalFruitDiet,
                     'page' => $page,
                     'pageSize' => $pageSize,
                 ],
@@ -66,7 +81,8 @@ class FavoriteController extends AbstractController
                 $fruit->setFavorite(false);
                 $entityManager->flush(); 
                 return $this->json([
-                    'message' => 'fruit has been removed from favorite list.', 
+                    'message' => 'fruit has been removed from favorite list.',
+                    'favorite' => false
                 ],
                 201); 
             } 
@@ -75,6 +91,7 @@ class FavoriteController extends AbstractController
             $entityManager->flush(); 
             return $this->json([
                 'message' => 'fruit has been added into favorite list.', 
+                'favorite' => true
             ],
             201);  
 

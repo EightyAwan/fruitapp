@@ -1,5 +1,7 @@
 <template>
     <div>
+      <label>Search By Name/Family</label>
+      <input type="text" v-model="searchQuery"> 
       <table>
       <thead>
         <tr>
@@ -10,7 +12,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" :key="item.id">
+        <tr v-for="item in filteredItems" :key="item.id">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.family }}</td>
@@ -36,6 +38,7 @@
     },
     data() {
       return {
+        searchQuery: '',
         items: [],
         page: 1,
         perPage: 10,
@@ -45,6 +48,11 @@
     computed: {
       lastPage() {
         return Math.ceil(this.total / this.perPage);
+      },
+      filteredItems() {
+      return this.items.filter(item => {
+        return item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) || item.family.toLowerCase().includes(this.searchQuery.toLowerCase());
+      });
       },
     },
     async mounted() {

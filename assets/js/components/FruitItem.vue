@@ -18,8 +18,16 @@ export default {
           toast(response.data.message, {
             autoClose: 1000,
           });
+          
+          console.log(response.data.favorite);
 
-          this.$router.push('/favorite');
+          if( response.data.favorite )
+          {
+            this.$router.push('/favorite');
+          }else{
+
+            this.$router.push('/');
+          } 
 
          })
         .catch(error => {
